@@ -6,7 +6,6 @@ from init import db
 from models.comment import Comment, comment_schema, comments_schema
 from models.task import Task 
 
-
 comments_bp = Blueprint("comments", __name__,url_prefix="/<int:task_id>/comments")
 
 # we already recieve the comments while fetching tasks, so no need to put the comments route here 
@@ -45,8 +44,24 @@ def delete_comment(task_id, comment_id):
     else:
         return {"error": f"Comment with id {comment_id} not found"}, 404 
     
+# update comment
+@comments_bp.route("/<int:comment_id>", methods=["PUT", "PATCH"])
+@jwt_required()
+def edit_comment(task_id, comment_id):
+    body_data = request.get_json()
+    stmt = db.select(Comment).filter_by(id=comment_id)
+    comment = db.session.scalar(stmt)
+    if comment:
+        comment.content = body_data.get("content") or comment.content
 
-    
+        db.session.commit()
+
+        return comment_schema.dump(comment) 
+    else:
+        return {"error": f"Comment with id {comment_id} not found"}, 404
+
+
+
 
 
 
