@@ -1,13 +1,15 @@
 from init import db, ma
 from marshmallow import fields
 
+#ADD ERROR AND COMMENTS!!!
+
 class Category(db.Model):
     __tablename__ = 'categories'
 
     id = db.Column(db.Integer, primary_key=True)
     label = db.Column(db.String, nullable=False)
 
-    tasks = db.relationship('Task', back_populates='category', cascade='all, delete')
+    tasks = db.relationship("Task", back_populates='category', cascade='all, delete')
 
 class CategorySchema(ma.Schema):
     tasks = fields.Nested('TaskSchema', many=True, exclude=['category'])
