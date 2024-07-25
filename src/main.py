@@ -24,6 +24,9 @@ def create_app():
     from controllers.auth_controller import auth_bp
     app.register_blueprint(auth_bp)
 
+    from controllers.category_controller import categories_bp
+    app.register_blueprint(categories_bp)
+
     from controllers.task_controller import tasks_bp
     app.register_blueprint(tasks_bp)
 
@@ -32,3 +35,5 @@ def create_app():
 if __name__ == "__main__":
     app = create_app()
     app.run(debug=True)
+
+# need to edit!!!!!!!
