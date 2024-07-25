@@ -6,7 +6,7 @@ class Comment(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String, nullable=False)
-    timestamp = db.Column(db.Date) 
+    timestamp = db.Column(db.DateTime, nullable=False) 
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     task_id = db.Column(db.Integer, db.ForeignKey("tasks.id"), nullable=False)
 
@@ -17,8 +17,10 @@ class CommentSchema(ma.Schema):
     user = fields.Nested("UserSchema", only=("name", "email"))
     task = fields.Nested("TaskSchema", exclude=["comments"])
 
-    class meta: 
-        fields = ("id", "message", "date", "user", "task")
+    timestamp = fields.DateTime(format="%Y-%m-%d %H:%M:%S", required=True)
+
+    class Meta: 
+        fields = ("id", "content", "timestamp", "user", "task")
 
 comment_schema = CommentSchema()
 comments_schema = CommentSchema(many=True)
