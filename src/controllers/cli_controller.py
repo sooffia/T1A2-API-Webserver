@@ -55,15 +55,17 @@ def seed_tables():
     ]
     
     db.session.add_all(users)
+    db.session.commit()
     
     categories = [
-        Category(label="To Do"),
-        Category(label="In Progress"),
-        Category(label="Done"),
+        Category(label="Work"),
+        Category(label="Personal"),
+        Category(label="Team Collaboration"),
         Category(label="On Hold")
     ]
 
     db.session.add_all(categories)
+    db.session.commit()
 
     tasks = [
         Task(
@@ -71,7 +73,8 @@ def seed_tables():
             description="Prepare and submit the final project report by the end of the week.",
             due_date=date.today(),
             status="To Do",
-            user=users[0] 
+            user=users[0], 
+            category=categories[1]
             ),
 
         Task(
@@ -80,6 +83,7 @@ def seed_tables():
             due_date=date.today(),
             status="In Progress",
             user=users[1], 
+            category=categories[2]
             ),
 
         Task(
@@ -87,7 +91,8 @@ def seed_tables():
             description="Update the API documentation to reflect recent changes.",
             due_date=date.today(),
             status="Completed",
-            user=users[2]
+            user=users[2],
+            category=categories[3]
         ),
 
         Task(
@@ -95,11 +100,13 @@ def seed_tables():
             description="Identify and fix bugs reported in the latest release.",
             due_date=date.today(),
             status="To Do",
-            user=users[3]
+            user=users[3], 
+            category=categories[2]
             )
     ]
     
     db.session.add_all(tasks)
+    db.session.commit()
 
     comments = [
         Comment(
