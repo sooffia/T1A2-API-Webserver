@@ -4,6 +4,7 @@ from init import db, bcrypt
 from models.users import User
 from models.task import Task
 from models.comment import Comment
+from models.category import Category 
 
 db_commands = Blueprint('db', __name__)
 
@@ -25,6 +26,7 @@ def seed_tables():
 
     Table values are specified and committed in the following order due to relationships:
         Users
+        Category 
         Tasks
         Comments
     """
@@ -53,6 +55,15 @@ def seed_tables():
     ]
     
     db.session.add_all(users)
+    
+    categories = [
+        Category(label="To Do"),
+        Category(label="In Progress"),
+        Category(label="Done"),
+        Category(label="On Hold")
+    ]
+
+    db.session.add_all(categories)
 
     tasks = [
         Task(
@@ -89,7 +100,6 @@ def seed_tables():
     ]
     
     db.session.add_all(tasks)
-    db.session.commit()
 
     comments = [
         Comment(
