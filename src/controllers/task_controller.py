@@ -2,12 +2,12 @@ from datetime import date
 from flask import Blueprint, request 
 from init import db 
 from models.task import Task, task_schema, tasks_schema 
+from models.category import Category 
 from flask_jwt_extended import jwt_required, get_jwt_identity 
 from controllers.comment_controller import comments_bp 
 
 tasks_bp = Blueprint("tasks", __name__, url_prefix="/tasks")
 tasks_bp.register_blueprint(comments_bp, url_prefix="/<int:task_id>/comments")
-# this is what i added!!
 
 # fetch all tasks - GET 
 @tasks_bp.route("/")
@@ -31,6 +31,17 @@ def get_one_task(task_id):
 @jwt_required()
 def create_task(): 
     body_data = request.get_json()
+    
+    # Extract and validate category label
+    label = body_data.get("label")
+    if not label:
+        return {"error": "Category label is required."}, 400
+
+    # Look up category by label, making the query case-insensitive
+    category = Category.query.filter(Category.label.ilike(label.strip())).first()
+    if not category:
+        return {"error": f"Category with label '{label}' does not exist."}, 404
+    
     # a new task model instance
     task = Task(
         title=body_data.get("title"),
@@ -38,6 +49,7 @@ def create_task():
         due_date=date.today(), 
         status=body_data.get("status"), 
         priority=body_data.get("priority"), 
+        category_id=category.id, 
         user_id=get_jwt_identity() 
     )
     db.session.add(task)
@@ -77,6 +89,15 @@ def update_task(task_id):
     
     else: 
         return {"error": f"Task with id {task_id} not found"}, 404
+
+
+
+
+
+
+
+
+
 
 
 
