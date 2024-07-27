@@ -21,8 +21,9 @@ class TaskTrackingSchema(ma.Schema):
         fields = ("id", "task", "estimated_hours", "actual_hours", "started_at", "finished_at")
         ordered = True 
 
-task_tracking_schema = TaskTracking()
-task_trackings_schema = TaskTracking(many=True)
+task_tracking_schema = TaskTrackingSchema()
+task_trackings_schema = TaskTrackingSchema(many=True)
+
 
 
 
