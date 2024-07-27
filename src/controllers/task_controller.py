@@ -30,7 +30,7 @@ def get_one_task(task_id):
 @tasks_bp.route("/", methods=["POST"])
 @jwt_required()
 def create_task(): 
-    body_data = request.get_json()
+    body_data = task_schema.load(request.get_json())
     
     # Extract and validate category label
     label = body_data.get("label")
@@ -56,8 +56,6 @@ def create_task():
     db.session.commit()
     return task_schema.dump(task)
 
-# only able to see token if the email is admin but not with user...
-
 # delete task - DELETE 
 @tasks_bp.route("/<int:task_id>", methods=["DELETE"])
 @jwt_required()
@@ -65,6 +63,9 @@ def delete_card(task_id):
     stmt = db.select(Task).filter_by(id=task_id)
     task = db.session.scalar(stmt)
     if task: 
+        if str(task.user_id) != get_jwt_identity():
+            return {"error": "It seems like you are not the owner of this task"}, 403
+        
         db.session.delete(task)
         db.session.commit()
         return {"message": f"Task '{task.title}' deleted successfully"}
@@ -75,10 +76,13 @@ def delete_card(task_id):
 @tasks_bp.route("/<int:task_id>", methods=["PUT", "PATCH"])
 @jwt_required()
 def update_task(task_id):
-    body_data = request.get_json()
+    body_data = task_schema.load(request.get_json(), partial=True)
     stmt = db.select(Task).filter_by(id=task_id)
     task = db.session.scalar(stmt)
     if task:
+        if str(task.user_id) != get_jwt_identity():
+            return {"error": "It seems like you are not the owner of this task"}, 403
+
         task.title = body_data.get("title") or task.title
         task.description = body_data.get("description") or task.description
         task.status = body_data.get("status") or task.status
@@ -89,6 +93,8 @@ def update_task(task_id):
     
     else: 
         return {"error": f"Task with id {task_id} not found"}, 404
+    
+
 
 
 
