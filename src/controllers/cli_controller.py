@@ -5,6 +5,7 @@ from models.users import User
 from models.task import Task
 from models.comment import Comment
 from models.category import Category 
+from models.task_tracking import TaskTracking  
 
 db_commands = Blueprint('db', __name__)
 
@@ -29,6 +30,7 @@ def seed_tables():
         Category 
         Tasks
         Comments
+        Task Tracking 
     """
     users = [
         User(
@@ -72,7 +74,7 @@ def seed_tables():
             title="Complete Project Report",
             description="Prepare and submit the final project report by the end of the week.",
             due_date=date.today(),
-            status="To Do",
+            priority = "High", 
             user=users[0], 
             category=categories[1]
             ),
@@ -81,7 +83,7 @@ def seed_tables():
             title="Develop New Feature",
             description="Work on developing the new authentication feature for the app.",
             due_date=date.today(),
-            status="In Progress",
+            priority = "Low",
             user=users[1], 
             category=categories[2]
             ),
@@ -90,7 +92,7 @@ def seed_tables():
             title="Update Documentation",
             description="Update the API documentation to reflect recent changes.",
             due_date=date.today(),
-            status="Completed",
+            priority = "Routine",
             user=users[2],
             category=categories[3]
         ),
@@ -99,7 +101,7 @@ def seed_tables():
             title="Fix Bugs",
             description="Identify and fix bugs reported in the latest release.",
             due_date=date.today(),
-            status="To Do",
+            priority = "Optional",
             user=users[3], 
             category=categories[2]
             )
@@ -139,6 +141,44 @@ def seed_tables():
         ]
 
     db.session.add_all(comments)
+    db.session.commit()
+
+       # Create effort estimations for tasks
+    task_trackings = [
+        TaskTracking(
+            task=tasks[0], 
+            estimated_hours=10,
+            actual_hours=None,
+            started_at=datetime.now(), 
+            finished_at=None
+        ),
+
+        TaskTracking(
+            task=tasks[1],
+            estimated_hours=20,
+            actual_hours=None,
+            started_at=datetime.now(), 
+            finished_at=datetime.now()
+        ),
+
+        TaskTracking(
+            task=tasks[2],
+            estimated_hours=15,
+            actual_hours=None,
+            started_at=datetime.now(),
+            finished_at=datetime.now()
+        ),
+
+        TaskTracking(
+            task=tasks[3],
+            estimated_hours=8,
+            actual_hours=None,
+            started_at=datetime.now(),
+            finished_at=datetime.now()
+        )
+    ]
+
+    db.session.add_all(task_trackings)
     db.session.commit()
 
     print("Database tables seeded")
