@@ -58,7 +58,7 @@ def create_comment(task_id):
 
     except SQLAlchemyError as e:
         db.session.rollback()
-        return {"error": "An error occurred while creating the comment", "details": str(e)}, 500
+        return {"error": "An error occurred while creating the comment"}, 500
 
 # Endpoint to delete a comment by ID
 @comments_bp.route("/<int:comment_id>", methods=["DELETE"])
@@ -98,7 +98,7 @@ def delete_comment(task_id, comment_id):
 
     except SQLAlchemyError as e:
         db.session.rollback()
-        return {"error": "An error occurred while deleting the comment", "details": str(e)}, 500
+        return {"error": "An error occurred while deleting the comment"}, 500
 
 # Endpoint to update a comment by ID
 @comments_bp.route("/<int:comment_id>", methods=["PUT", "PATCH"])
@@ -150,7 +150,7 @@ def edit_comment(task_id, comment_id):
 
     except SQLAlchemyError as e:
         db.session.rollback()
-        return {"error": "An error occurred while updating the comment", "details": str(e)}, 500
+        return {"error": "An error occurred while updating the comment"}, 500
 
 
 
