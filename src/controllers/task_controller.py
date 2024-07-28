@@ -14,12 +14,28 @@ tasks_bp.register_blueprint(task_tracking_bp, url_prefix="/<int:task_id>/task_tr
 # fetch all tasks - GET 
 @tasks_bp.route("/")
 def get_all_tasks():
+    """
+    Fetch all tasks and return them in descending order of due date.
+
+    Returns:
+        JSON: Serialized list of all tasks.
+    """
     stmt = db.select(Task).order_by(Task.due_date.desc())
     tasks = db.session.scalars(stmt).all()
     return tasks_schema.dump(tasks)
 
 @tasks_bp.route("/<int:task_id>")
 def get_one_task(task_id):
+    """
+    Fetch a single task by its ID.
+
+    Args:
+        task_id (int): ID of the task to fetch.
+
+    Returns:
+        JSON: Serialized task data if found.
+        dict: Error message if task not found.
+    """
     stmt = db.select(Task).filter_by(id=task_id).options(db.joinedload(Task.task_tracking))
     task = db.session.scalar(stmt)
     if task:
@@ -32,19 +48,26 @@ def get_one_task(task_id):
 @tasks_bp.route("/", methods=["POST"])
 @jwt_required()
 def create_task(): 
+    """
+    Create a new task with the provided data.
+
+    Returns:
+        JSON: Serialized task data if created successfully.
+        dict: Error message if category label is missing or invalid.
+    """
     body_data = task_schema.load(request.get_json())
-    
+
     # Extract and validate category label
-    label = body_data.get("label")
-    if not label:
+    try:
+        label = body_data["category"]["label"]
+    except KeyError:
         return {"error": "Category label is required."}, 400
 
-    # Look up category by label, making the query case-insensitive
     category = Category.query.filter(Category.label.ilike(label.strip())).first()
     if not category:
         return {"error": f"Category with label '{label}' does not exist."}, 404
     
-    # a new task model instance
+    # Create a new task model instance
     task = Task(
         title=body_data.get("title"),
         description=body_data.get("description"),
@@ -55,12 +78,23 @@ def create_task():
     )
     db.session.add(task)
     db.session.commit()
+
     return task_schema.dump(task)
 
 # delete task - DELETE 
 @tasks_bp.route("/<int:task_id>", methods=["DELETE"])
 @jwt_required()
 def delete_card(task_id):
+    """
+    Delete a task by its ID.
+
+    Args:
+        task_id (int): ID of the task to delete.
+
+    Returns:
+        dict: Success message if task deleted.
+        dict: Error message if task not found or unauthorized.
+    """
     stmt = db.select(Task).filter_by(id=task_id)
     task = db.session.scalar(stmt)
     if task: 
@@ -77,6 +111,16 @@ def delete_card(task_id):
 @tasks_bp.route("/<int:task_id>", methods=["PUT", "PATCH"])
 @jwt_required()
 def update_task(task_id):
+    """
+    Update a task by its ID with the provided data.
+
+    Args:
+        task_id (int): ID of the task to update.
+
+    Returns:
+        JSON: Serialized task data if updated successfully.
+        dict: Error message if task not found or unauthorized.
+    """
     body_data = task_schema.load(request.get_json(), partial=True)
     stmt = db.select(Task).filter_by(id=task_id)
     task = db.session.scalar(stmt)
