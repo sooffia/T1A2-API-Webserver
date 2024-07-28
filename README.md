@@ -21,7 +21,7 @@ Accountability suffers when there is no clear assignment of tasks or tracking of
 
 For the creation of the task manager API, I used a Trello board to manage and track tasks efficiently.
 
-The Trello board can be viewed here: T2A2 - API Webserver
+The Trello board can be viewed here: [T2A2 - API Webserver](https://trello.com/b/QU4HcX64/task-manager) 
 
 #### **_Task Allocation_**
 I organised the board into four lists, each representing different stages of task progression:
