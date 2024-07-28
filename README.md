@@ -2,9 +2,9 @@
 
 ### R1: Explain the problem that this app will solve, and explain how this app solves or addresses the problem. 
 
-The task management system I have developed targets the prevalent inefficiencies and organizational challenges in task management. Many individuals and teams resort to using a mix of tools such as spreadsheets, emails, and messaging apps, leading to disorganised workflows. This fragmentation causes lost time, missed deadlines, and insufficient accountability, severely impacting productivity and project outcomes. According to a survey by McKinsey, employees spend nearly 20% of their time searching for internal information or tracking down colleagues for help, highlighting the inefficiencies in current task management practices (McKinsey & Company, 2012).
+The task management system I have developed targets the prevalent inefficiencies and organizational challenges in task management. Many individuals and teams resort to using a mix of tools such as spreadsheets, emails, and messaging apps, leading to disorganised workflows. This fragmentation causes lost time, missed deadlines, and insufficient accountability, severely impacting productivity and project outcomes. According to a survey by McKinsey, employees spend nearly 20% of their time searching for internal information or tracking down colleagues for help, highlighting the inefficiencies in current task management practices (Chui et al., 2012). 
 
-Effective task management is essential for maintaining productivity in both individual and team settings. However, the lack of a unified system presents several problems. One is that inefficiency arises from fragmented workflows caused by using multiple tools, which increases the time and effort required to manage tasks. Research from the Harvard Business Review indicates that employees waste significant time transitioning between different applications, which can reduce productivity by up to 40% (Harvard Business Review, 2018).
+Effective task management is essential for maintaining productivity in both individual and team settings. However, the lack of a unified system presents several problems. One is that inefficiency arises from fragmented workflows caused by using multiple tools, which increases the time and effort required to manage tasks. Research from the Harvard Business Review indicates that employees waste significant time transitioning between different applications, which can reduce productivity by up to 40% (Cross, 2024). 
 
 The proposed task management system offers a centralised platform for managing tasks, including creating, updating, categorising, prioritising, and commenting. This system ensures all task-related information is consolidated and easily accessible, thereby reducing administrative overhead and improving efficiency. Key features include user management for handling registrations and profiles, task management for various task operations, category management for organisation, priority management for setting task importance, and comment management for collaboration.
 
@@ -196,7 +196,7 @@ In the project development phase, the implemented models and their relationships
     - Users Relationship:
         - Description: Each task is associated with one user
         - Implementation: This is implemented with a foreign key 'user_id' in the 'Tasks' model, linked to the 'id' field in the 'Users' model.
-        - Back_populates: This relationship uses the 'back_populates' condition for synchronization between models.
+        - Back_populates: This relationship uses the 'back_populates' condition for synchronisation between models.
     - Aid to Database Implementation: By linking tasks to users, this relationship ensures that tasks are correctly assigned and managed by the right users. It facilitates the retrieval of user-specific tasks and enhances user-task management within the application.
 
     - Comments Relationship:
@@ -209,7 +209,7 @@ In the project development phase, the implemented models and their relationships
         - Description: Each task belongs to a single category, establishing a one-to-many relationship between 'Category' and 'Task'.
         - Implementation: This is implemented using the 'category_id' foreign key in the Task model.
         - Back_populates: This relationship uses the 'back_populates' condition.
-    - Aid to Database Implementation: Categorizing tasks helps in organizing and filtering tasks based on categories. This relationship makes it easy to retrieve and manage tasks by category, enhancing task organization and management.
+    - Aid to Database Implementation: Categorising tasks helps in organising and filtering tasks based on categories. This relationship makes it easy to retrieve and manage tasks by category, enhancing task organisation and management.
 
     - Task Tracking Relationship:
         - Description: Each task has a single task tracking record, establishing a one-to-one relationship between 'Task' and 'TaskTracking'.
@@ -239,7 +239,7 @@ In the project development phase, the implemented models and their relationships
         - Description: Each category can include multiple tasks.
         - Implementation: This is implemented using the 'category_id' foreign key in the 'Tasks' model.
         - Back_populates: This relationship uses the 'back_populates' condition.
-    - Aid to Database Implementation: Categorizing tasks helps in organizing and filtering tasks based on categories. This relationship makes it easy to retrieve and manage tasks by category, enhancing task organization and management.
+    - Aid to Database Implementation: Categorising tasks helps in organising and filtering tasks based on categories. This relationship makes it easy to retrieve and manage tasks by category, enhancing task organization and management.
 
 #### **TaskTracking Model:** 
 - Attributes: The TaskTracking model includes id, 'task_id', 'estimated_hours', 'actual_hours', 'started_at', and 'finished_at'
@@ -252,7 +252,7 @@ In the project development phase, the implemented models and their relationships
 
 #### **How the Relationships Aid Database Implementation**
 - Efficiency and Integrity:
-    - Normalization: The database design follows normalization principles to reduce redundancy and ensure data integrity. For example, by using foreign keys and separate tables for related entities, we avoid data duplication and maintain consistent and accurate data.
+    - Normalisation: The database design follows normalisation principles to reduce redundancy and ensure data integrity. For example, by using foreign keys and separate tables for related entities, we avoid data duplication and maintain consistent and accurate data.
     
     - Back_populates: The use of 'back_populates' ensures that related objects are kept in sync, making data manipulation easier and more intuitive. This bidirectional relationship allows for easy access and updates to related data from either side of the relationship.
     
@@ -629,6 +629,14 @@ By implementing these models and relationships, the database structure is robust
 - Authentication Methods:
     - Requires a valid JWT token
 
+### References: 
+- Chui, M., Manyika, J., Bughin, J., Dobbs, R., Roxburgh, C., Sarrazin, H., Sands, G., & Westergren, M. (2012). The social economy: Unlocking value and productivity through social technologies. In McKinsey & Company. https://www.mckinsey.com/industries/technology-media-and-telecommunications/our-insights/the-social-economy 
+- Cross, R. (2024, March 19). Collaborative Overload. Harvard Business Review. https://hbr.org/2016/01/collaborative-overload 
+- Oppermann, A. (2023, September 26). What Is Object-Relational Mapping (ORM)? Built In. https://builtin.com/data-science/object-relational-mapping
+- SQLAlchemy. (n.d.). https://www.sqlalchemy.org/features.html  
+- Datta, D. (2024, March 28). What is SQLAlchemy Used For? An Overview with Practical Examples. CData Software. https://www.cdata.com/blog/what-is-sqlalchemy#:~:text=Core%20functionalities%20of%20SQLAlchemy&text=SQLAlchemy
+- Dhruv, S., Dhruv, S., & Dhruv, S. (2024, July 12). PostgreSQL Advantages and Disadvantages. Aalpha. https://www.aalpha.net/blog/pros-and-cons-of-using-postgresql-for-application-development/ 
+- Kaula, V. (n.d.). Normalizing with Entity Relationship Diagramming. TDAN.com. https://tdan.com/normalizing-with-entity-relationship-diagramming/4583 
 
 
 
