@@ -1,8 +1,7 @@
-# connect intialised modules/libraies to the flask application 
 import os 
 from flask import Flask 
+from marshmallow.exceptions import ValidationError 
 from init import db, ma, bcrypt, jwt 
-
 
 def create_app(): 
     app = Flask(__name__)
@@ -18,6 +17,11 @@ def create_app():
     bcrypt.init_app(app)
     jwt.init_app(app)
 
+    @app.errorhandler(ValidationError)
+    def validation_error(err):
+        # Handle Marshmallow validation errors and return a 400 response with error details
+        return {"error": err.messages}, 400 
+
     from controllers.cli_controller import db_commands
     app.register_blueprint(db_commands)
 
@@ -30,10 +34,11 @@ def create_app():
     from controllers.task_controller import tasks_bp
     app.register_blueprint(tasks_bp)
 
+    from controllers.task_tracking_controller import task_tracking_bp
+    app.register_blueprint(task_tracking_bp)
+
     return app 
 
 if __name__ == "__main__":
     app = create_app()
     app.run(debug=True)
-
-# need to edit!!!!!!!
