@@ -1,6 +1,6 @@
 from datetime import datetime
 from flask import Blueprint, jsonify, request
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required 
 from init import db
 from models.task_tracking import TaskTracking, task_tracking_schema, task_trackings_schema
 from models.task import Task
@@ -8,14 +8,27 @@ from models.task import Task
 task_tracking_bp = Blueprint("task_trackings", __name__, url_prefix="/tasks/<int:task_id>/task_trackings")
 
 def parse_date(date_input):
+    """Parse date from string to datetime object or return the input if already a datetime object."""
     if isinstance(date_input, datetime):
         return date_input
-    return datetime.strptime(date_input, "%d/%m/%y %H:%M")
+    try:
+        return datetime.strptime(date_input, "%d/%m/%y %H:%M")
+    except ValueError:
+        raise ValueError("Invalid date format. Use DD/MM/YY HH:MM")
 
 # Create a new task tracking record - POST
 @task_tracking_bp.route("/", methods=["POST"])
 @jwt_required()
 def create_task_tracking(task_id):
+    """
+    Create a new task tracking record for a specific task.
+
+    Args:
+        task_id (int): ID of the task to which the tracking record belongs.
+
+    Returns:
+        JSON: The newly created task tracking record or an error message.
+    """
     body_data = request.get_json()
 
     # Load the request data
@@ -55,9 +68,19 @@ def create_task_tracking(task_id):
     return task_tracking_schema.dump(task_tracking), 201
 
 # Update the task tracking record - PATCH
-@task_tracking_bp.route("/<int:tracking_id>", methods=["PATCH"])
+@task_tracking_bp.route("/<int:tracking_id>", methods=["PATCH", "PUT"])
 @jwt_required()
 def update_task_tracking(task_id, tracking_id):
+    """
+    Update an existing task tracking record for a specific task.
+
+    Args:
+        task_id (int): ID of the task to which the tracking record belongs.
+        tracking_id (int): ID of the task tracking record to be updated.
+
+    Returns:
+        JSON: The updated task tracking record or an error message.
+    """
     body_data = request.get_json()
 
     # Validate and fetch the task tracking record by ID
@@ -88,6 +111,15 @@ def update_task_tracking(task_id, tracking_id):
 @task_tracking_bp.route("/", methods=["GET"])
 @jwt_required()
 def get_task_trackings(task_id):
+    """
+    Fetch all task tracking records for a specific task.
+
+    Args:
+        task_id (int): ID of the task for which to fetch tracking records.
+
+    Returns:
+        JSON: List of task tracking records or an error message.
+    """
     stmt = db.select(TaskTracking).filter_by(task_id=task_id)
     task_trackings = db.session.scalars(stmt).all()
 
@@ -100,6 +132,16 @@ def get_task_trackings(task_id):
 @task_tracking_bp.route("/<int:tracking_id>", methods=["DELETE"])
 @jwt_required()
 def delete_task_tracking(task_id, tracking_id):
+    """
+    Delete a task tracking record for a specific task.
+
+    Args:
+        task_id (int): ID of the task to which the tracking record belongs.
+        tracking_id (int): ID of the task tracking record to be deleted.
+
+    Returns:
+        JSON: A success message or an error message.
+    """
     # Fetch the task tracking record by ID and task ID
     stmt = db.select(TaskTracking).filter_by(id=tracking_id, task_id=task_id)
     task_tracking = db.session.scalar(stmt)
